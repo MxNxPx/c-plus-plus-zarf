@@ -1,0 +1,11 @@
+.DS_Store
+build
+.idea
+/cache
+**/*.tar.zst
+*.tar
+coverage.out
+*.tar.gz
+zarf-sbom
+pki/
+certs/

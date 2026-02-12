@@ -1,0 +1,16 @@
+apiVersion: uds.dev/v1alpha1
+kind: Package
+metadata:
+  name: c-plus-plus
+spec:
+  network:
+    expose:
+      - service: c-plus-plus-api
+        podLabels:
+          app.kubernetes.io/name: c-plus-plus-api
+        gateway: tenant
+        host: c-plus-plus
+        port: 8080
+    allow:
+      - direction: Ingress
+        remoteGenerated: Anywhere

@@ -1,0 +1,26 @@
+# Copyright 2024 Defense Unicorns
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Defense-Unicorns-Commercial
+
+# yaml-language-server: $schema=https://raw.githubusercontent.com/defenseunicorns/zarf/main/zarf.schema.json
+kind: ZarfPackageConfig
+metadata:
+  name: c-plus-plus
+  description: "UDS C++ Example"
+  version: "dev"
+
+components:
+  - name: c-plus-plus
+    required: true
+    charts:
+      - name: uds-c-plus-plus
+        namespace: c-plus-plus
+        version: 0.1.0
+        localPath: ./chart
+    actions:
+      onCreate:
+        before:
+          - description: Build the container image
+            cmd: docker build -t c-plus-plus-api:0.1.0 .
+            dir: src/c-plus-plus-api/
+    images:
+      - c-plus-plus-api:0.1.0
