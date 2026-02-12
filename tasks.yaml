@@ -1,0 +1,56 @@
+includes:
+  - test: ./tasks/test.yaml
+  - create: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/create.yaml
+  - lint: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/lint.yaml
+  - pull: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/pull.yaml
+  - deploy: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/deploy.yaml
+  - setup: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/setup.yaml
+  - actions: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/actions.yaml
+  - badge: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/badge.yaml
+  - upgrade: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/upgrade.yaml
+  - compliance: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/compliance.yaml
+  - publish: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/publish.yaml
+
+tasks:
+  - name: default
+    description: Setup k3d cluster, deploy package
+    actions:
+      - task: create-packages
+      - task: setup:k3d-test-cluster
+      - task: create-deploy-test-bundle
+
+  - name: create-packages
+    description: Create the packages
+    inputs:
+      options:
+        description: Options passed to the create:package task for every package
+        default: "--skip-sbom"
+    actions:
+      - task: create:package
+        with:
+          options: ${{ .inputs.options }}
+
+  - name: create-deploy-test-bundle
+    description: Test and validate cluster is deployed with the package
+    actions:
+      - task: create-packages
+        with:
+          options: ""
+      - task: create:test-bundle
+      - task: deploy:test-bundle
+      - task: setup:create-doug-user
+      - task: test:all
+
+  - name: dev
+    description: Create and deploy the bundle on an existing cluster (for iteration/dev speed)
+    actions:
+      - task: create-packages
+      - task: create:test-bundle
+      - task: deploy:test-bundle
+
+  - name: test-install
+    description: Test deploying the current branch to a new cluster
+    actions:
+      - task: create-packages
+      - task: setup:k3d-test-cluster
+      - task: create-deploy-test-bundle
