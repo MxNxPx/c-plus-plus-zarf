@@ -11,6 +11,12 @@ includes:
   - compliance: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/compliance.yaml
   - publish: https://raw.githubusercontent.com/defenseunicorns/uds-common/v1.24.0/tasks/publish.yaml
 
+variables:
+  - name: ZARF_CREATE_ARCH
+    default: amd64
+  - name: ZARF_CREATE_OPTIONS
+    default: "--set PLATFORM=linux/amd64"
+
 tasks:
   - name: default
     description: Setup k3d cluster, deploy package
@@ -22,13 +28,17 @@ tasks:
   - name: create-packages
     description: Create the packages
     inputs:
+      architecture:
+        description: The architecture of the package to create
+        default: ${ZARF_CREATE_ARCH}
       options:
         description: Options passed to the create:package task for every package
-        default: "--skip-sbom"
+        default: ${ZARF_CREATE_OPTIONS}
     actions:
       - task: create:package
         with:
           options: ${{ .inputs.options }}
+          architecture: ${{ .inputs.architecture }}
 
   - name: create-deploy-test-bundle
     description: Test and validate cluster is deployed with the package

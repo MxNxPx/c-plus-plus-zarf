@@ -6,7 +6,13 @@ kind: ZarfPackageConfig
 metadata:
   name: c-plus-plus
   description: "UDS C++ Example"
-  version: "dev"
+  version: "###ZARF_PKG_TMPL_VERSION###"
+
+constants:
+  - name: VERSION
+    value: "###ZARF_PKG_TMPL_VERSION###"
+  - name: PLATFORM
+    value: "###ZARF_PKG_TMPL_PLATFORM###"
 
 components:
   - name: c-plus-plus
@@ -20,7 +26,7 @@ components:
       onCreate:
         before:
           - description: Build the container image
-            cmd: docker build -t c-plus-plus-api:0.1.0 .
+            cmd: docker build -t c-plus-plus-api:0.1.0 --platform "###ZARF_PKG_TMPL_PLATFORM###" .
             dir: src/c-plus-plus-api/
     images:
       - c-plus-plus-api:0.1.0
