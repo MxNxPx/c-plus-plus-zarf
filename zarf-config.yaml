@@ -1,0 +1,6 @@
+package:
+  create:
+    set:
+      VERSION: "dev"
+      PLATFORM: "linux/amd64"
+
