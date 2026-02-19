@@ -13,6 +13,9 @@ constants:
     value: "###ZARF_PKG_TMPL_VERSION###"
   - name: PLATFORM
     value: "###ZARF_PKG_TMPL_PLATFORM###"
+variables:
+  - name: IMAGE_TAG
+    default: "###ZARF_PKG_TMPL_VERSION###"
 
 components:
   - name: c-plus-plus
@@ -22,11 +25,13 @@ components:
         namespace: c-plus-plus
         version: 0.1.0
         localPath: ./chart
+        valuesFiles:
+          - values/common-values.yaml
     actions:
       onCreate:
         before:
           - description: Build the container image
-            cmd: docker build -t c-plus-plus-api:0.1.0 --platform "###ZARF_PKG_TMPL_PLATFORM###" .
+            cmd: docker build -t c-plus-plus-api:###ZARF_PKG_TMPL_VERSION### --platform "###ZARF_PKG_TMPL_PLATFORM###" .
             dir: src/c-plus-plus-api/
     images:
-      - c-plus-plus-api:0.1.0
+      - c-plus-plus-api:###ZARF_PKG_TMPL_VERSION###

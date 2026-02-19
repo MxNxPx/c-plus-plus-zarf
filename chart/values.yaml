@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: c-plus-plus-api
-  tag: "0.1.0"
+  tag: "dev"
   pullPolicy: IfNotPresent
 
 service:
