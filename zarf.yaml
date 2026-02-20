@@ -20,6 +20,8 @@ variables:
 components:
   - name: c-plus-plus
     required: true
+    only:
+      flavor: upstream
     charts:
       - name: uds-c-plus-plus
         namespace: c-plus-plus

@@ -16,6 +16,8 @@ variables:
     default: amd64
   - name: ZARF_CREATE_OPTIONS
     default: "--set PLATFORM=linux/amd64"
+  - name: FLAVOR
+    default: "upstream"
 
 tasks:
   - name: default
@@ -42,10 +44,18 @@ tasks:
 
   - name: create-deploy-test-bundle
     description: Test and validate cluster is deployed with the package
+    inputs:
+      architecture:
+        description: The architecture of the package to create
+        default: ${ZARF_CREATE_ARCH}
+      options:
+        description: Options passed to the create:package task for every package
+        default: ${ZARF_CREATE_OPTIONS}
     actions:
       - task: create-packages
         with:
-          options: ""
+          options: ${{ .inputs.options }}
+          architecture: ${{ .inputs.architecture }}
       - task: create:test-bundle
       - task: deploy:test-bundle
       - task: setup:create-doug-user
