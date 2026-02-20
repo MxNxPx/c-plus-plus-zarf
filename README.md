@@ -12,3 +12,18 @@ The server only supports the HTTP GET method. When a GET request is received, th
 }
 ```
 
+## Useful commands
+
+```bash
+# Build AMD package 
+uds run create-packages --set ZARF_CREATE_OPTIONS="--set VERSION=0.1.0"
+
+# Build ARM package 
+uds run create-packages --set ZARF_CREATE_ARCH="arm64" --set ZARF_CREATE_OPTIONS="--set PLATFORM=linux/arm64 --set VERSION=0.1.0"
+
+# Publis package to registry
+uds zarf package publish zarf-package-c-plus-plus-arm64-0.1.0-upstream.tar.zst oci://registry.uds.dev/public
+
+# Deploy package from registry
+uds zarf package deploy --confirm oci://registry.uds.dev/public/c-plus-plus:0.1.0-upstream
+```

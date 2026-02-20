@@ -30,8 +30,12 @@ components:
     actions:
       onCreate:
         before:
-          - description: Build the container image
-            cmd: docker build -t c-plus-plus-api:###ZARF_PKG_TMPL_VERSION### --platform "###ZARF_PKG_TMPL_PLATFORM###" .
+          - cmd: docker build -t c-plus-plus-api:###ZARF_PKG_TMPL_VERSION### --platform "###ZARF_PKG_TMPL_PLATFORM###" .
             dir: src/c-plus-plus-api/
-    images:
-      - c-plus-plus-api:###ZARF_PKG_TMPL_VERSION###
+          - cmd: docker save c-plus-plus-api:###ZARF_PKG_TMPL_VERSION### -o c-plus-plus.tar
+    #    images:
+    #      - c-plus-plus-api:###ZARF_PKG_TMPL_VERSION###
+    imageArchives:
+      - path: c-plus-plus.tar
+        images:
+          - c-plus-plus-api:###ZARF_PKG_TMPL_VERSION###
