@@ -22,7 +22,7 @@ tasks:
         maxTotalSeconds: 30
         cmd: |
           STATUS=$(curl -L -o /dev/null -s -w "%{http_code}\n" https://c-plus-plus.uds.dev)
-          echo "#TEMPLATE_APPLICATION_DISPLAY_NAME# system status: ${STATUS}"
+          echo "c-plus-plus system status: ${STATUS}"
           if [ "$STATUS" != "200" ]; then
             sleep 10
             exit 1

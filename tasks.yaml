@@ -56,6 +56,12 @@ tasks:
         with:
           options: ${{ .inputs.options }}
           architecture: ${{ .inputs.architecture }}
+      - description: Move pkg to dev
+        maxTotalSeconds: 30
+        cmd: |
+          PKG_NAME=$(ls -1rt ./zarf-package-*zst | tail -1)
+          DEV_PKG_NAME=$(echo $PKG_NAME | sed -E 's/(-(arm64|amd64)-)[^-]+/\1dev/')
+          mv -fv ${PKG_NAME} ${DEV_PKG_NAME}
       - task: create:test-bundle
       - task: deploy:test-bundle
       - task: setup:create-doug-user
@@ -63,14 +69,35 @@ tasks:
 
   - name: dev
     description: Create and deploy the bundle on an existing cluster (for iteration/dev speed)
+    inputs:
+      architecture:
+        description: The architecture of the package to create
+        default: ${ZARF_CREATE_ARCH}
+      options:
+        description: Options passed to the create:package task for every package
+        default: ${ZARF_CREATE_OPTIONS}
     actions:
       - task: create-packages
-      - task: create:test-bundle
-      - task: deploy:test-bundle
+        with:
+          options: ${{ .inputs.options }}
+          architecture: ${{ .inputs.architecture }}
+      - task: create-deploy-test-bundle
+#      - task: create:test-bundle
+#      - task: deploy:test-bundle
 
   - name: test-install
     description: Test deploying the current branch to a new cluster
+    inputs:
+      architecture:
+        description: The architecture of the package to create
+        default: ${ZARF_CREATE_ARCH}
+      options:
+        description: Options passed to the create:package task for every package
+        default: ${ZARF_CREATE_OPTIONS}
     actions:
       - task: create-packages
+        with: 
+          options: ${{ .inputs.options }}
+          architecture: ${{ .inputs.architecture }}
       - task: setup:k3d-test-cluster
       - task: create-deploy-test-bundle
